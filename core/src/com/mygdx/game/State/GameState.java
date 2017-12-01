@@ -31,6 +31,11 @@ public class GameState extends ScreenAdapter {
     private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
     private Texture bg;
     private Player player;
+    private  float y =0;
+    private float b;
+    private float i;
+
+    private float timer =0;
 
     public GameState(Shooter2d peteGame) {
         this.peteGame = peteGame;
@@ -66,7 +71,7 @@ public class GameState extends ScreenAdapter {
     }
 
     private void update(float dt) {
-        player.input();
+        player.input(dt);
         player.checkoutthescreen();
     }
 

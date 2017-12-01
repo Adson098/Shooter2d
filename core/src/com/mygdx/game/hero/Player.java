@@ -21,12 +21,7 @@ public class Player {
     private float maxSpeedX;
     private float maxSpeedY;
     private Rectangle player_box;
-    private float MAX_JUMP;
-    private boolean canJump ;
-    private float jumpDistance;
-    private float blockJump;
-    private float MAX_JUMP_DISTANCE;
-    private float MAX_Y_SPEED;
+
 
     public Player() {
         x = 0;
@@ -35,35 +30,24 @@ public class Player {
         height = 50;
         speedX = 0;
         speedY = 0;
-        maxSpeedX = 3;
-        maxSpeedY = 2;
+        maxSpeedX = 300;
+        maxSpeedY = 200;
         player_box = new Rectangle(x, y, width, height);
-        MAX_JUMP = 3*height;
-        canJump = true;
-        jumpDistance = 0;
-        blockJump = 0;
-        MAX_JUMP_DISTANCE = 3 * height;
-        MAX_Y_SPEED = 2;
     }
 
-    public void input() {
+    public void input(float dt) {
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             speedX = maxSpeedX;
         } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             speedX = -maxSpeedX;
         }
-       else if (Gdx.input.isKeyPressed(Input.Keys.UP) && !canJump) {
-            speedY = maxSpeedY;
-            jumpDistance += speedY;
-        }
          else {
-            speedY = -MAX_Y_SPEED;
             speedX = 0;
             speedY = 0;
         }
 
-        x += speedX;
-        y += speedY;
+        x += speedX*dt;
+        y += speedY*dt;
         updateBox();
 
     }
