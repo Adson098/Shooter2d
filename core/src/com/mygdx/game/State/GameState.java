@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.Shooter2d;
@@ -31,16 +34,12 @@ public class GameState extends ScreenAdapter {
     private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
     private Texture bg;
     private Player player;
-    private  float y =0;
-    private float b;
-    private float i;
+    private World world = new World(new Vector2(0, -10), true);
+    Box2DDebugRenderer debugrenderer = new Box2DDebugRenderer();
 
-    private float timer =0;
 
     public GameState(Shooter2d peteGame) {
         this.peteGame = peteGame;
-        bg = new Texture("map/bg.png");
-        player = new Player();
 
     }
 
@@ -52,6 +51,8 @@ public class GameState extends ScreenAdapter {
 
     @Override
     public void show() {
+        bg = new Texture("map/bg.png");
+        player = new Player(world);
         camera = new OrthographicCamera();
         viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
         viewport.apply(true);
@@ -73,6 +74,7 @@ public class GameState extends ScreenAdapter {
     private void update(float dt) {
         player.input(dt);
         player.checkoutthescreen();
+        world.step(1 / 60f, 6, 2);
     }
 
     private void clearScreen() {
@@ -90,11 +92,17 @@ public class GameState extends ScreenAdapter {
     }
 
     private void drawDebug() {
+        debugrenderer.render(world, camera.combined);
         shapeRenderer.setProjectionMatrix(camera.projection);
         shapeRenderer.setTransformMatrix(camera.view);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         player.drawDebug(shapeRenderer);
         shapeRenderer.end();
+    }
+
+    public void dispose() {
+        System.out.println("Dispose Method - GameState.java");
+        player.getCircle().dispose();
     }
 
 }
